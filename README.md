@@ -6,17 +6,15 @@
 
 - [How It Works](#howitworks)
 - [Features](#features)
+- [Dependencies](#dependencies)
+- [Building from Source](#building-from-source)
 - [Installation](#installation)
   - [Manual](#manual)
-    - [Dependencies](#dependencies)
-    - [Building from Source](#building-from-source)
-    - [Setup](#setup)
-    - [Using SystemD User Service](#using-systemd-user-service)
   - [Automated](#automated)
 - [Usage](#usage)
 - [Uninstallation](#uninstallation)
 - [Contributing](#contributing)
-- [Updating the Layout Switcher Binary](#contributing)
+  - [Updating the Layout Switcher Binary](#contributing)
 - [License](#license)
 
 ## How It Works
@@ -40,7 +38,6 @@ If, for example, you have French (fr) as the first layout and German (de) as the
 - Integrated with the GNOME desktop environment.
 
 ## Installation
-## Manual
 
 ### Dependencies
 
@@ -73,16 +70,12 @@ cd layout-switcher
 gcc -o switcher switcher.c -lX11 -lXi
 ```
 
-4. Move the compiled binary to `/usr/local/bin/`:
+## Manual
+
+1. Move the compiled binary to `/usr/local/bin/`:
 ```
 sudo mv switcher /usr/local/bin/
 ```
-
-## Setup
-
-### Using SystemD User Service
-
-1. Ensure the compiled `switcher` binary is in `/usr/local/bin/`.
 2. Create a service file `layout-switcher.service` in `~/.config/systemd/user/` with the provided content.
 3. Enable and start the service:
 
