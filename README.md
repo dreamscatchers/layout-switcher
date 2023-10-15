@@ -1,9 +1,10 @@
 # Layout Switcher
 
-**Layout Switcher** is a small utility to allow users to switch their keyboard layouts using specific key combinations in a GNOME environment.
+**Layout Switcher** is a utility designed for the GNOME environment, enabling users to deterministically switch between keyboard layouts using specific key combinations. Unlike the typical circular layout switching, where each key press toggles to the next layout in a sequence, Layout Switcher utilizes the left and right shift keys to provide predictable layout changes. By pressing the dedicated key (left shift for one layout and right shift for another), users can be confident in which layout they're switching to, ensuring a more efficient and user-friendly experience.
 
 ## Table of Contents
 
+- [How It Works](#howitworks)
 - [Features](#features)
 - [Installation](#installation)
   - [Dependencies](#dependencies)
@@ -13,6 +14,20 @@
 - [Usage](#usage)
 - [Contributing](#contributing)
 - [License](#license)
+
+## How It Works
+
+Layout Switcher utilizes the left and right shift keys to deterministically switch between keyboard layouts:
+
+    Left Shift: Activates the first keyboard layout (Layout #1).
+    Right Shift: Activates the second keyboard layout (Layout #2).
+
+It's crucial to understand that the utility relies on the order of the layouts as they're listed in GNOME's input source manager. The program doesn't specifically distinguish between "en", "ru", or any other language codes. Instead, it's based on the order in which the layouts are installed or listed:
+
+    inputSources[0]: This will be the layout that gets activated with the Left Shift key.
+    inputSources[1]: This will be the layout that gets activated with the Right Shift key.
+
+If, for example, you have French (fr) as the first layout and German (de) as the second in your GNOME settings, then pressing the left shift will switch to French, and the right shift will switch to German.
 
 ## Features
 
