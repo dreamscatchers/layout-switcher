@@ -96,7 +96,7 @@ chmod +x setup.sh
 
 ## Usage
 
-Once set up, simply use the defined key combinations (e.g., Left Shift + Other Key, Right Shift + Other Key) to switch between your two predefined layouts.
+Once set up, simply use the defined key combinations (e.g., Left Shift, Right Shift) to switch between your two predefined layouts.
 
 ## Uninstallation
 
