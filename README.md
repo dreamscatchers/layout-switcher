@@ -7,12 +7,16 @@
 - [How It Works](#howitworks)
 - [Features](#features)
 - [Installation](#installation)
-  - [Dependencies](#dependencies)
-  - [Building from Source](#building-from-source)
-- [Setup](#setup)
-  - [Using SystemD User Service](#using-systemd-user-service)
+  - [Manual](#manual)
+    - [Dependencies](#dependencies)
+    - [Building from Source](#building-from-source)
+    - [Setup](#setup)
+    - [Using SystemD User Service](#using-systemd-user-service)
+  - [Automated](#automated)
 - [Usage](#usage)
+- [Uninstallation](#uninstallation)
 - [Contributing](#contributing)
+- [Updating the Layout Switcher Binary](#contributing)
 - [License](#license)
 
 ## How It Works
@@ -36,6 +40,7 @@ If, for example, you have French (fr) as the first layout and German (de) as the
 - Integrated with the GNOME desktop environment.
 
 ## Installation
+## Manual
 
 ### Dependencies
 
@@ -86,13 +91,41 @@ systemctl --user enable layout-switcher.service
 systemctl --user start layout-switcher.service
 ```
 
+## Automated
+**⚠️ WARNING:** Always review the content of scripts before executing them, especially if they require elevated privileges. Running scripts from the internet without verifying their actions can be harmful.
+
+For a quick setup, you can run the provided setup script:
+
+```bash
+chmod +x setup.sh
+./setup.sh
+```
+
+
 ## Usage
 
 Once set up, simply use the defined key combinations (e.g., Left Shift + Other Key, Right Shift + Other Key) to switch between your two predefined layouts.
 
+## Uninstallation
+
+To remove the **Layout Switcher** and its traces, you can use the provided uninstallation script:
+
+```bash
+chmod +x uninstall.sh
+./uninstall.sh
+```
 ## Contributing
 
 Contributions, issues, and feature requests are welcome! Feel free to check [issues page](https://github.com/dreamscatchers/layout-switcher/issues). 
+
+## Updating the Layout Switcher Binary
+
+After making changes and recompiling the `switcher` binary, you can use the provided update script to replace the currently running version:
+
+```bash
+chmod +x update-switcher.sh
+./update-switcher.sh
+```
 
 ## License
 
