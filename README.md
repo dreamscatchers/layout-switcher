@@ -37,8 +37,6 @@ If, for example, you have French (fr) as the first layout and German (de) as the
 - Lightweight and efficient.
 - Integrated with the GNOME desktop environment.
 
-## Installation
-
 ### Dependencies
 
 Before you start, ensure you have the following dependencies installed:
@@ -70,6 +68,7 @@ cd layout-switcher
 gcc -o switcher switcher.c -lX11 -lXi
 ```
 
+## Installation
 ## Manual
 
 1. Move the compiled binary to `/usr/local/bin/`:
