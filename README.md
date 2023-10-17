@@ -75,7 +75,23 @@ gcc -o switcher switcher.c -lX11 -lXi
 ```
 sudo mv switcher /usr/local/bin/
 ```
-2. Create a service file `layout-switcher.service` in `~/.config/systemd/user/` with the provided content.
+2. Create a service file `layout-switcher.service` in `~/.config/systemd/user/` with the provided content:
+
+```
+[Unit]
+Description=Layout Switcher Daemon
+After=local-fs.target
+
+[Service]
+ExecStart=/usr/local/bin/switcher
+
+Restart=on-failure
+Environment=PATH=/usr/bin:/usr/local/bin:/usr/local/sbin
+
+[Install]
+WantedBy=default.target
+
+```
 3. Enable and start the service:
 
 ```
