@@ -99,6 +99,12 @@ systemctl --user enable layout-switcher.service
 systemctl --user start layout-switcher.service
 ```
 
+4. To check service status run:
+
+```
+systemctl --user status layout-switcher.service
+```
+
 ## Automated
 **⚠️ WARNING:** Always review the content of scripts before executing them, especially if they require elevated privileges. Running scripts from the internet without verifying their actions can be harmful.
 
@@ -124,7 +130,7 @@ chmod +x uninstall.sh
 ```
 ## Contributing
 
-Contributions, issues, and feature requests are welcome! Feel free to check [issues page](https://github.com/dreamscatchers/layout-switcher/issues). 
+Contributions, issues, and feature requests are welcome! Feel free to check [issues page](https://github.com/dreamscatchers/layout-switcher/issues).
 
 ## Updating the Layout Switcher Binary
 
