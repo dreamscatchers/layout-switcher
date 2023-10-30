@@ -63,43 +63,57 @@ git clone https://github.com/dreamscatchers/layout-switcher.git
 cd layout-switcher
 ```
 
-3. Compile the program:
-```
-gcc -o switcher switcher.c -lX11 -lXi
-```
 
 ## Installation
 ## Manual
 
-1. Move the compiled binary to `/usr/local/bin/`:
+1. Compile the program:
+```
+gcc -o switcher switcher.c -lX11 -lXi
+```
+
+2. Move the compiled binary to `/usr/local/bin/`:
 ```
 sudo mv switcher /usr/local/bin/
 ```
-2. Create a service file `layout-switcher.service` in `~/.config/systemd/user/` with the provided content:
+
+3. Create a service file `layout-switcher.service` in `~/.config/systemd/user/` with the provided content:
 
 ```
 [Unit]
 Description=Layout Switcher Daemon
-After=local-fs.target
+After=display-manager.service
+Wants=display-manager.service
 
 [Service]
-ExecStart=/usr/local/bin/switcher
-
-Restart=on-failure
+ExecStart=/usr/local/bin/start-switcher.sh
+Environment=DISPLAY=:0
+Environment=XAUTHORITY=/run/user/1000/gdm/Xauthority
+Environment=XDG_RUNTIME_DIR=/run/user/1000
+Environment=DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus
 Environment=PATH=/usr/bin:/usr/local/bin:/usr/local/sbin
+Restart=on-failure
 
 [Install]
-WantedBy=default.target
+WantedBy=graphical-session.target
+```
+
+4. Copy start-switcher.sh to /usr/local/bin and make it runnable
 
 ```
-3. Enable and start the service:
+sudo cp start-switcher.sh /usr/local/bin
+```
+
+This script starts service correctly after X server started
+
+5. Enable and start the service:
 
 ```
 systemctl --user enable layout-switcher.service
 systemctl --user start layout-switcher.service
 ```
 
-4. To check service status run:
+6. To check service status run:
 
 ```
 systemctl --user status layout-switcher.service
