@@ -82,38 +82,31 @@ sudo mv switcher /usr/local/bin/
 ```
 [Unit]
 Description=Layout Switcher Daemon
-After=display-manager.service
-Wants=display-manager.service
+Wants=gdm.service
+After=local-fs.target gdm.service
 
 [Service]
-ExecStart=/usr/local/bin/start-switcher.sh
+ExecStart=/usr/local/bin/switcher
 Environment=DISPLAY=:0
 Environment=XAUTHORITY=/run/user/1000/gdm/Xauthority
 Environment=XDG_RUNTIME_DIR=/run/user/1000
 Environment=DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus
 Environment=PATH=/usr/bin:/usr/local/bin:/usr/local/sbin
-Restart=on-failure
+
+Restart=always
 
 [Install]
 WantedBy=graphical-session.target
 ```
 
-4. Copy start-switcher.sh to /usr/local/bin and make it runnable
-
-```
-sudo cp start-switcher.sh /usr/local/bin
-```
-
-This script starts service correctly after X server started
-
-5. Enable and start the service:
+4. Enable and start the service:
 
 ```
 systemctl --user enable layout-switcher.service
 systemctl --user start layout-switcher.service
 ```
 
-6. To check service status run:
+5. To check service status run:
 
 ```
 systemctl --user status layout-switcher.service

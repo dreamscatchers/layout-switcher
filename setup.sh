@@ -13,9 +13,6 @@ echo "Copying switcher binary to /usr/local/bin..."
 sudo cp switcher /usr/local/bin/
 sudo chmod +x /usr/local/bin/switcher
 
-#Copy script for correct service start
-sudo cp start-switcher.sh /usr/local/bin
-
 # Copy the systemd service file
 echo "Setting up systemd service for user..."
 mkdir -p ~/.config/systemd/user/

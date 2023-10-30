@@ -1,18 +1,17 @@
 [Unit]
 Description=Layout Switcher Daemon
-After=display-manager.service
-Wants=display-manager.service
+Wants=gdm.service
+After=local-fs.target gdm.service
 
 [Service]
-ExecStart=/usr/local/bin/start-switcher.sh
+ExecStart=/usr/local/bin/switcher
 Environment=DISPLAY=:0
 Environment=XAUTHORITY=/run/user/1000/gdm/Xauthority
 Environment=XDG_RUNTIME_DIR=/run/user/1000
 Environment=DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus
 Environment=PATH=/usr/bin:/usr/local/bin:/usr/local/sbin
 
-Restart=on-failure
-
+Restart=always
 
 [Install]
 WantedBy=graphical-session.target
