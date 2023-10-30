@@ -4,6 +4,10 @@
 command -v gcc >/dev/null 2>&1 || { echo >&2 "GCC is required but it's not installed. Aborting."; exit 1; }
 command -v gdbus >/dev/null 2>&1 || { echo >&2 "GDBus is required but it's not installed. Aborting."; exit 1; }
 
+# Compile binary
+echo "Compiling binary"
+gcc switcher.c -o switcher -lX11 -lXi
+
 # Copy the switcher binary
 echo "Copying switcher binary to /usr/local/bin..."
 sudo cp switcher /usr/local/bin/
