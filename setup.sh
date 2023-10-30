@@ -7,6 +7,7 @@ command -v gdbus >/dev/null 2>&1 || { echo >&2 "GDBus is required but it's not i
 # Copy the switcher binary
 echo "Copying switcher binary to /usr/local/bin..."
 sudo cp switcher /usr/local/bin/
+sudo chmod +x /usr/local/bin/switcher
 
 # Copy the systemd service file
 echo "Setting up systemd service for user..."
