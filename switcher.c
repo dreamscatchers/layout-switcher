@@ -18,6 +18,11 @@ const char *CMD_GDBUS_RU[] = {
     "imports.ui.status.keyboard.getInputSourceManager().inputSources[1].activate()", NULL
 };
 
+const char *CMD_GDBUS_ES[] = {
+    "gdbus", "call", "--session", "--dest=org.gnome.Shell",
+    "--object-path=/org/gnome/Shell", "--method=org.gnome.Shell.Eval",
+    "imports.ui.status.keyboard.getInputSourceManager().inputSources[2].activate()", NULL
+};
 #define LEFT_SHIFT_KEY 50
 #define RIGHT_SHIFT_KEY 62
 
@@ -35,6 +40,8 @@ void switch_to_layout(const char *layout) {
             execvp(CMD_GDBUS_US[0], (char *const *)CMD_GDBUS_US);
         } else if (strcmp(layout, "ru") == 0) {
             execvp(CMD_GDBUS_RU[0], (char *const *)CMD_GDBUS_RU);
+        } else if (strcmp(layout, "es") == 0) {
+            execvp(CMD_GDBUS_RU[0], (char *const *)CMD_GDBUS_ES);
         }
 
         perror("Failed to execute command");
@@ -44,23 +51,45 @@ void switch_to_layout(const char *layout) {
 
 void handle_key_press(int detail, int *LS, int *RS, int *OK) {
     if (detail == LEFT_SHIFT_KEY) {
-        *LS = 1;
-        *OK = 0;
-    } else if (detail == RIGHT_SHIFT_KEY) {
-        *RS = 1;
-        *OK = 0;
-    } else {
-        if (*LS == 1 || *RS == 1) {
-            *OK = 1;
-        }
+        *LS = 1; *OK = 0;
+        return;
+    }
+    if (detail == RIGHT_SHIFT_KEY) {
+        *RS = 1; *OK = 0;
+        return;
+    }
+    if (*LS == 1 || *RS == 1) {
+        *OK = 1;
     }
 }
 
-void handle_key_release(int detail, int LS, int RS, int OK) {
-    if (detail == LEFT_SHIFT_KEY && LS && !OK) {
-        switch_to_layout("us");
-    } else if (detail == RIGHT_SHIFT_KEY && RS && !OK) {
-        switch_to_layout("ru");
+void handle_key_release(int detail, int *LS, int *RS, int *OK) {
+    if (detail == LEFT_SHIFT_KEY) {
+        *LS = 0;
+        if (!(*OK)) {
+            if (*RS) {
+                switch_to_layout("es");
+                *OK = 1;
+            } else {
+                switch_to_layout("us");
+                *OK = 0;
+            }
+        }
+        return;
+    }
+
+    if (detail == RIGHT_SHIFT_KEY) {
+        *RS = 0;
+        if (!(*OK)) {
+            if (*LS) {
+                switch_to_layout("es");
+                *OK = 1;
+            } else {
+                switch_to_layout("ru");
+                *OK = 0;
+            }
+        }
+        return;
     }
 }
 
@@ -82,9 +111,9 @@ int main() {
         fprintf(stderr, "Not supported XI %d.%d\n", major, minor);
         return 1;
     }
-    
+
     Window root = DefaultRootWindow(display);
-    
+
     XIEventMask evmask;
     unsigned char mask[(XI_LASTEVENT + 7)/8] = { 0 };
     evmask.deviceid = XIAllDevices;
@@ -92,7 +121,7 @@ int main() {
     evmask.mask = mask;
     XISetMask(mask, XI_KeyPress);
     XISetMask(mask, XI_KeyRelease);
-    
+
     XISelectEvents(display, root, &evmask, 1);
 
     XEvent ev;
@@ -111,7 +140,7 @@ int main() {
                     if (xievent->evtype == XI_KeyPress) {
                         handle_key_press(xievent->detail, &LS, &RS, &OK);
                     } else if (xievent->evtype == XI_KeyRelease) {
-                        handle_key_release(xievent->detail, LS, RS, OK);
+                        handle_key_release(xievent->detail, &LS, &RS, &OK);
                     }
                 } else {
                     fprintf(stderr, "xievent data is null!\n");
