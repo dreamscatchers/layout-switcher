@@ -5,6 +5,12 @@
 #include <X11/Xlib.h>
 #include <X11/extensions/XInput2.h>
 
+typedef struct {
+    int LS;
+    int RS;
+    int OK;
+} KeyState;
+
 // Constants for the gdbus commands and key details
 const char *CMD_GDBUS_US[] = {
     "gdbus", "call", "--session", "--dest=org.gnome.Shell",
@@ -49,44 +55,44 @@ void switch_to_layout(const char *layout) {
     }
 }
 
-void handle_key_press(int detail, int *LS, int *RS, int *OK) {
+void handle_key_press(int detail, KeyState *state) {
     if (detail == LEFT_SHIFT_KEY) {
-        *LS = 1; *OK = 0;
+        state->LS = 1; state->OK = 0;
         return;
     }
     if (detail == RIGHT_SHIFT_KEY) {
-        *RS = 1; *OK = 0;
+        state->RS = 1; state->OK = 0;
         return;
     }
-    if (*LS == 1 || *RS == 1) {
-        *OK = 1;
+    if (state->LS || state->RS) {
+        state->OK = 1;
     }
 }
 
-void handle_key_release(int detail, int *LS, int *RS, int *OK) {
+void handle_key_release(int detail, KeyState *state) {
     if (detail == LEFT_SHIFT_KEY) {
-        *LS = 0;
-        if (!(*OK)) {
-            if (*RS) {
+        state->LS = 0;
+        if (!(state->OK)) {
+            if (state->RS) {
                 switch_to_layout("es");
-                *OK = 1;
+                state->OK = 1;
             } else {
                 switch_to_layout("us");
-                *OK = 0;
+                state->OK = 0;
             }
         }
         return;
     }
 
     if (detail == RIGHT_SHIFT_KEY) {
-        *RS = 0;
-        if (!(*OK)) {
-            if (*LS) {
+        state->RS = 0;
+        if (!(state->OK)) {
+            if (state->LS) {
                 switch_to_layout("es");
-                *OK = 1;
+                state->OK = 1;
             } else {
                 switch_to_layout("ru");
-                *OK = 0;
+                state->OK = 0;
             }
         }
         return;
@@ -125,7 +131,7 @@ int main() {
     XISelectEvents(display, root, &evmask, 1);
 
     XEvent ev;
-    int LS = 0, RS = 0, OK = 0;
+    KeyState state = {0, 0, 0};
 
     while (1) {
         XNextEvent(display, &ev);
@@ -138,9 +144,9 @@ int main() {
 
                 if (xievent) {
                     if (xievent->evtype == XI_KeyPress) {
-                        handle_key_press(xievent->detail, &LS, &RS, &OK);
+                        handle_key_press(xievent->detail, &state);
                     } else if (xievent->evtype == XI_KeyRelease) {
-                        handle_key_release(xievent->detail, &LS, &RS, &OK);
+                        handle_key_release(xievent->detail, &state);
                     }
                 } else {
                     fprintf(stderr, "xievent data is null!\n");
