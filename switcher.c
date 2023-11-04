@@ -57,11 +57,17 @@ void switch_to_layout(const char *layout) {
 
 void handle_key_press(int detail, KeyState *state) {
     if (detail == LEFT_SHIFT_KEY) {
-        state->LS = 1; state->OK = 0;
+        state->LS = 1;
+        if (!state->RS) {
+            state->OK = 0;
+        }
         return;
     }
     if (detail == RIGHT_SHIFT_KEY) {
-        state->RS = 1; state->OK = 0;
+        state->RS = 1;
+        if (!state->LS) {
+            state->OK = 0;
+        }
         return;
     }
     if (state->LS || state->RS) {
