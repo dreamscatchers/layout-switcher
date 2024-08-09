@@ -4,6 +4,8 @@
 #include <unistd.h>
 #include <X11/Xlib.h>
 #include <X11/extensions/XInput2.h>
+#include <sys/wait.h>
+#include <signal.h>
 
 typedef struct {
     int LS;
@@ -53,6 +55,11 @@ void switch_to_layout(const char *layout) {
         perror("Failed to execute command");
         exit(EXIT_FAILURE);
     }
+}
+
+// Signal handler for SIGCHLD to prevent zombie processes
+void handle_sigchld(int sig) {
+    while (waitpid(-1, NULL, WNOHANG) > 0);
 }
 
 void handle_key_press(int detail, KeyState *state) {
@@ -106,6 +113,16 @@ void handle_key_release(int detail, KeyState *state) {
 }
 
 int main() {
+    // Set up the signal handler for SIGCHLD
+    struct sigaction sa;
+    sa.sa_handler = &handle_sigchld;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = SA_RESTART | SA_NOCLDSTOP;
+    if (sigaction(SIGCHLD, &sa, NULL) == -1) {
+        perror("sigaction");
+        exit(1);
+    }
+
     Display *display = XOpenDisplay(NULL);
     if (!display) {
         fprintf(stderr, "Unable to open display.\n");
