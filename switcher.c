@@ -47,7 +47,7 @@ void switch_to_layout(const char *layout) {
         } else if (strcmp(layout, "ru") == 0) {
             execvp(CMD_GDBUS_RU[0], (char *const *)CMD_GDBUS_RU);
         } else if (strcmp(layout, "es") == 0) {
-            execvp(CMD_GDBUS_RU[0], (char *const *)CMD_GDBUS_ES);
+            execvp(CMD_GDBUS_ES[0], (char *const *)CMD_GDBUS_ES);
         }
 
         perror("Failed to execute command");
